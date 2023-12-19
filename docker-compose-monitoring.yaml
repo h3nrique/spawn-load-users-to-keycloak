@@ -1,0 +1,18 @@
+version: "3.8"
+
+services:
+  jaeger:
+    image: jaegertracing/all-in-one:1
+    networks:
+      - spawn-user-demo
+    ports:
+      - "5775:5775"
+      - "6831:6831"
+      - "6832:6832"
+      - "5778:5778"
+
+networks:
+  spawn-user-demo:
+    external: true
+
+# vim: set et ts=2 sw=2:

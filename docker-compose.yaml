@@ -1,0 +1,102 @@
+version: "3.8"
+
+services:
+  mariadb:
+    image: mariadb
+    healthcheck:
+      test: ["CMD", "/usr/local/bin/healthcheck.sh", "--su-mysql", "--connect", "--innodb_initialized"]
+      start_period: 20s
+      interval: 5s
+      timeout: 5s
+      retries: 5
+    environment:
+      MYSQL_ROOT_PASSWORD: admin
+      MYSQL_DATABASE: eigr
+      MYSQL_USER: admin
+      MYSQL_PASSWORD: admin
+    volumes:
+      - mariadb:/var/lib/mysql
+    networks:
+      - spawn-user-demo
+    ports:
+      - "3307:3306"
+
+  nats:
+    image: nats:2
+    networks:
+      - spawn-user-demo
+    ports:
+      - "8222:8222"
+      - "4222:4222"
+
+  spawn:
+    image: eigr/spawn-proxy:1.1.1
+    environment:
+      SPAWN_USE_INTERNAL_NATS: "false"
+      SPAWN_PUBSUB_ADAPTER: nats
+      SPAWN_PUBSUB_NATS_HOSTS: nats://nats:4222
+      SPAWN_STATESTORE_KEY: 3Jnb0hZiHIzHTOih7t2cTEPEpY98Tu1wvQkPfq/XwqE=
+      SPAWN_SUPERVISORS_STATE_HANDOFF_CONTROLLER: crdt
+      PROXY_HTTP_CLIENT_ADAPTER_POOL_SCHEDULERS: 9
+      PROXY_HTTP_CLIENT_ADAPTER_POOL_SIZE: 100
+      PROXY_HTTP_CLIENT_ADAPTER_POOL_MAX_IDLE_TIMEOUT: 1000
+      PROXY_APP_NAME: spawn
+      PROXY_CLUSTER_STRATEGY: gossip
+      PROXY_DATABASE_TYPE: mariadb
+      PROXY_DATABASE_HOST: mariadb
+      PROXY_DATABASE_PORT: 3306
+      PROXY_DATABASE_NAME: eigr
+      PROXY_HTTP_PORT: 9001
+      USER_FUNCTION_PORT: 8091
+      USER_FUNCTION_HOST: "app" # Used when run actorhost in 'app' container defined in this file.
+#      USER_FUNCTION_HOST: "host.docker.internal" # Used when run actorhost in localhost with docker.
+#      USER_FUNCTION_HOST: "host.containers.internal" # Used when run actorhost in localhost with podman.
+#    extra_hosts:
+#          - "host.docker.internal:host-gateway"
+#          - "host.containers.internal:host-gateway"
+    depends_on:
+      mariadb:
+        condition: service_healthy
+    networks:
+      - spawn-user-demo
+    ports:
+      - "9001:9001"
+    deploy:
+      resources:
+        limits:
+          cpus: '4'
+          memory: 1024M
+        reservations:
+          cpus: '4'
+          memory: 1024M
+
+  app:
+    build:
+      context: .
+      dockerfile: Dockerfile-dev
+    image: postalcode-spawn-java-demo:localbuild
+    environment:
+      ACTOR_PORT: 8091
+      ACTOR_HOST: "app"
+      SPAWN_PROXY_PORT: 9001
+      SPAWN_PROXY_HOST: "spawn"
+      SPAWN_SYSTEM_NAME: "spawn-system"
+      KEYCLOAK_AUTH_URL: "http://keycloak:8180"
+    depends_on:
+      mariadb:
+        condition: service_healthy
+#      spawn-proxy:
+#        condition: service_healthy
+    networks:
+      - spawn-user-demo
+    ports:
+      - "8080:8080"
+
+networks:
+  spawn-user-demo:
+    external: true
+
+volumes:
+  mariadb:
+
+# vim: set et ts=2 sw=2:

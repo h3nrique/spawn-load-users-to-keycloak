@@ -1,0 +1,6 @@
+email,doc,first_name,last_name,birth_date,mobile,city_name,city_ibge_id,uf_initials,uf_name,uf_igbe_id
+john@example.com,11111111111,John,Doe,1941-05-03,(11) 91111-1111,Sao Paulo,3550308,SP,Sao Paulo,35
+jane@example.com,22222222222,Jane,Doe,1941-05-03,(21) 92222-2222,Rio de Janeiro,3304557,RJ,Rio de Janeiro,33
+janechild1@example.com,333,Jane Child3,Doe,1967-05-03,(21) 92222-2222,Rio de Janeiro,3304557,RJ,Rio de Janeiro,33
+janechild2@example.com,44444444444,Jane Child2,Doe,,,,,,,33
+johnchild1@example.com,55555555555,John Child1,Doe,1965-05-03,(11) 91111-1111,Rio de Janeiro,3550308,SP,Sao Paulo,35

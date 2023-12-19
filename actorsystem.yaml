@@ -1,0 +1,14 @@
+apiVersion: spawn-eigr.io/v1
+kind: ActorSystem
+metadata:
+  name: spawn-load
+  labels:
+    app: spawn-load
+spec:
+  selector:
+    app: spawn-load
+  statestore:
+    type: MySql
+    credentialsSecretRef: mysql-example-secret
+    pool:
+      size: "30"

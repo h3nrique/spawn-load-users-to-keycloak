@@ -1,0 +1,64 @@
+version: "3.8"
+
+services:
+  postgres:
+    image: docker.io/postgres:14
+    volumes:
+      - example-postgres-data:/var/lib/postgresql/data
+    environment:
+      TZ: America/Sao_Paulo
+      POSTGRES_DB: example
+      POSTGRES_USER: example
+      POSTGRES_PASSWORD: example4120
+    networks:
+      - spawn-user-demo
+
+  keycloak:
+    image: quay.io/keycloak/keycloak:23.0
+    command:
+      - start-dev
+    ports:
+      - "8180:8080"
+    environment:
+      TZ: America/Sao_Paulo
+      KEYCLOAK_ADMIN: example
+      KEYCLOAK_ADMIN_PASSWORD: example4120
+      KC_DB: postgres
+      KC_DB_URL_HOST: postgres
+      KC_DB_URL_DATABASE: example
+      KC_DB_USERNAME: example
+      KC_DB_PASSWORD: example4120
+      KC_DB_SCHEMA: public
+      KC_HOSTNAME: localhost
+      KC_HOSTNAME_PORT: 8180
+      KC_HOSTNAME_STRICT_BACKCHANNEL: "true"
+      KC_HOSTNAME_STRICT_HTTPS: "false"
+      KC_HOSTNAME_STRICT: "false"
+      KC_PROXY: edge
+      KC_HEALTH_ENABLED: "true"
+      KC_HTTP_ENABLED: "true"
+      KC_METRICS_ENABLED: "true"
+      PROXY_ADDRESS_FORWARDING: "true"
+    networks:
+      - spawn-user-demo
+
+  pgadmin:
+    container_name: example-pgadmin
+    image: docker.io/dpage/pgadmin4:latest
+    environment:
+      TZ: America/Sao_Paulo
+      PGADMIN_DEFAULT_EMAIL: admin@example.com
+      PGADMIN_DEFAULT_PASSWORD: admin
+    ports:
+      - "8190:80"
+    networks:
+      - spawn-user-demo
+
+networks:
+  spawn-user-demo:
+    external: true
+
+volumes:
+  example-postgres-data:
+
+# vim: set et ts=2 sw=2:

@@ -1,0 +1,18 @@
+syntax = "proto3";
+
+package domain;
+
+option java_package = "br.com.fabricads.poc.proto";
+
+enum Status {
+  UNKNOWN = 0;
+  CREATED = 1;
+  UPDATED = 2;
+  FOUND = 3;
+  ERROR = 4;
+  CONFLICT = 5;
+}
+
+message GeneratorRequest {
+  string csv_content = 1;
+}

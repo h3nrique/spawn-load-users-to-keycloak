@@ -1,0 +1,10 @@
+/.idea/
+/target
+/dependency-reduced-pom.xml
+*.iml
+/.vscode/
+.classpath
+README.md
+request.http
+docker-compose.yaml
+openshift-pipeline.yaml

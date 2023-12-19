@@ -1,0 +1,10 @@
+syntax = "proto3";
+
+package domain;
+
+option java_package = "br.com.fabricads.poc.proto";
+
+message KeycloakState {
+  string access_token = 4;
+  string refresh_token = 5;
+}

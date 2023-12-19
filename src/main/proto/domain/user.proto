@@ -1,0 +1,23 @@
+syntax = "proto3";
+
+package domain;
+
+import "domain/common.proto";
+
+option java_package = "br.com.fabricads.poc.proto";
+
+message UserRequest {
+    UserState state = 1;
+}
+
+message UserState {
+  Status status = 1;
+  string username = 2;
+  string first_name = 3;
+  string last_name = 4;
+  string email = 5;
+  string birth_date = 6;
+  string mobile = 7;
+  string city_ibge_id = 8;
+  string uf = 9;
+}

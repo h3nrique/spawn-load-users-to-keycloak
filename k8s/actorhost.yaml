@@ -1,0 +1,38 @@
+apiVersion: spawn-eigr.io/v1
+kind: ActorHost
+metadata:
+  labels:
+    app: spawn-load-users-to-keycloak
+  name: spawn-load-users-to-keycloak
+  annotations:
+    spawn-eigr.io/actor-system: spawn-load
+    spawn-eigr.io/app-port: "8091"
+    spawn-eigr.io/sidecar-pubsub-nats-hosts: "nats://nats.example.svc.cluster.local:4222"
+spec:
+  selector:
+    app: spawn-load-users-to-keycloak
+  autoscaler:
+    min: 2
+    max: 5
+  host:
+    image: image-registry.openshift-image-registry.svc:5000/example/spawn-load-users-to-keycloak
+    env:
+      - name: TZ
+        value: 'America/Sao_Paulo'
+      - name: STARTUP_DELAY_SECONDS
+        value: "30"
+      - name: SPAWN_SYSTEM_NAME
+        value: spawn-load
+      - name: KEYCLOAK_AUTH_URL
+        value: https://sso.examle.com/auth
+      - name: KEYCLOAK_REALM
+        value: example
+      - name: KEYCLOAK_USERNAME
+        value: example
+      - name: KEYCLOAK_PASSWORD
+        value: example4120
+    ports:
+      - name: "http"
+        containerPort: 8080
+      - name: "actor"
+        containerPort: 8091

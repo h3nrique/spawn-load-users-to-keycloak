@@ -1,0 +1,7 @@
+/.idea/
+/target
+/dependency-reduced-pom.xml
+*.iml
+/.vscode/
+.classpath
+localreadme.md

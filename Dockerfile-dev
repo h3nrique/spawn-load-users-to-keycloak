@@ -1,0 +1,12 @@
+FROM docker.io/library/maven:3-openjdk-21 as build
+LABEL authors="Paulo Henrique Alves <paulo.alves@fabricads.com.br>"
+RUN mkdir -p /usr/src
+WORKDIR /usr/src
+COPY . /usr/src
+RUN mvn clean install -DskipTests -Dmaven.javadoc.skip=true
+
+FROM docker.io/library/openjdk:21
+LABEL authors="Paulo Henrique Alves <paulo.alves@fabricads.com.br>"
+EXPOSE 8091 8080
+COPY --from=build  /usr/src/target/spawn-load-users-to-keycloak-jar-with-dependencies.jar  /opt/
+ENTRYPOINT ["java", "-Djava.security.egd=file:/dev/./urandom", "-jar", "/opt/spawn-load-users-to-keycloak-jar-with-dependencies.jar"]

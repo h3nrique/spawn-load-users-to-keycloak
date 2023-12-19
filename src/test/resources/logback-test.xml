@@ -1,0 +1,16 @@
+<configuration>
+    <logger name="org.testcontainers" level="INFO"/>
+    <logger name="io.eigr.spawn" level="DEBUG"/>
+    <logger name="br.com.fabricads.poc.spawn" level="DEBUG"/>
+    <appender name="STDOUT" class="ch.qos.logback.core.ConsoleAppender">
+        <!-- encoders are assigned the type
+             ch.qos.logback.classic.encoder.PatternLayoutEncoder by default -->
+        <encoder>
+            <pattern>%d{HH:mm:ss.SSS} %-5level %logger - %msg%n</pattern>
+        </encoder>
+    </appender>
+
+    <root level="INFO">
+        <appender-ref ref="STDOUT"/>
+    </root>
+</configuration>
